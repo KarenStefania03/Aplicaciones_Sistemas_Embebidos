@@ -1,4 +1,4 @@
-<h1 align="center">Sistema de Reconocimiento de Herramientas y Monitoreo de Movimiento<# **Pacial Primer Corte**>
+<h1 align="center"> # **Pacial Primer Corte**>
   
 # **Pacial Primer Corte**
 
