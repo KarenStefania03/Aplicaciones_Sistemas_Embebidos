@@ -11,6 +11,7 @@
   
 * Los micropocedores en el cerebro de la computadora realiza las funciones de la CPU en un chip. Es mas potente y versátil, pensando para procesar grandes volúmenes en información en sistemas complejos.
 
+------
     
 **B.Define la arquitectura Von Neumann y la Arquitectura de Harvar además: Exponer sus características ventajas y diferencias.**
 
@@ -25,6 +26,7 @@
 | Desventaja | Cuello de botella al compartir bus de datos e instrucciones | Más compleja de implementar |
 | Definición | Misma memoria para datos y programas. Secuencialidad: la CPU procesa una instrucción a la vez. | Utiliza un sistema de almacenamiento separado físicamente para las instrucciones y para los datos.|
 
+------
 
 **C.¿Qué son los procesadores tipos RISC y tipo CISC?**
 
@@ -34,6 +36,7 @@
 
 * RISC (Computadora de Conjunto de Instrucciones Reducidas): Trabaja con un número limitado de instrucciones simples, lo que simplifica la programación y optimiza la eficiencia. Cuando un procesador está diseñado para manejar pocas instrucciones… se le denomina RISC.
 
+-----
 
 **D.¿Qué es ARM (Advanced RISC Machine)?**
 
@@ -47,6 +50,7 @@ Entre sus propiedades destacan: instrucciones sencillas, bajo consumo de energí
 
 Consiste en una gama de arquitecturas de procesadores fundamentadas en el enfoque RIS pensadas para maximizar la eficiencia energética y el rendimiento.
 
+------
 
 **E.¿Cuál es la arquitectura de Arduino? y ¿Qué características tiene?**
 
@@ -63,6 +67,7 @@ Consiste en una gama de arquitecturas de procesadores fundamentadas en el enfoqu
 | Corriente por pin | 20 mA recomendados por pin (máxima absoluta 40 mA) |
 | Descripción | El microcontrolador admite ser reprogramado mediante el bootloader. Las entradas y salidas pueden adaptarse a las necesidades del usuario. |
 
+-------
 
 **F.¿Cuál es la arquitectura del pic 16f887 y sus principales características?**
 
@@ -72,7 +77,7 @@ Consiste en una gama de arquitecturas de procesadores fundamentadas en el enfoqu
 
 Los **microcontroladores PIC** forman parte de una familia de dispositivos basados en arquitectura **RISC (Reduced Instruction Set Computer)**, diseñados para ser eficientes, rápidos y de bajo consumo energético.
 
----
+
 * Arquitectura
 
 | Componente | Descripción |
@@ -84,7 +89,6 @@ Los **microcontroladores PIC** forman parte de una familia de dispositivos basad
 | Tecnologías de bajo consumo | Implementa mecanismos para reducir el consumo energético |
 | Unidad de procesamiento | Cuenta con contador de programa, ALU y buses diferenciados |
 
----
 
 * Características principales
 
@@ -94,8 +98,5 @@ Los **microcontroladores PIC** forman parte de una familia de dispositivos basad
 | Versatilidad | Amplia gama de modelos para diferentes aplicaciones |
 | Memoria de programa | Utiliza memoria **Flash** para almacenar los programas |
 
----
-
-> Incorpora varios periféricos, dispone de memoria Flash y emplea tecnologías de bajo consumo.
 
 
