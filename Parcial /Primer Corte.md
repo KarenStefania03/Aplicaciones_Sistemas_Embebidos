@@ -99,4 +99,7 @@ Los **microcontroladores PIC** forman parte de una familia de dispositivos basad
 | Memoria de programa | Utiliza memoria **Flash** para almacenar los programas |
 
 
+-----
+-----
 
+## **2)Parrte de Diseño**
