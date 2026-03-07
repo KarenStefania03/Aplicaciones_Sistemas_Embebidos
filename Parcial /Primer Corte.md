@@ -1,3 +1,5 @@
+<h1 align="center">Sistema de Reconocimiento de Herramientas y Monitoreo de Movimiento<# **Pacial Primer Corte**>
+  
 # **Pacial Primer Corte**
 
 
@@ -229,3 +231,11 @@ La interfaz puede incluir:
 -  Panel con las herramientas detectadas  
 -  Indicador de velocidad de las personas  
 -  Alertas emitidas en tiempo real
+
+------------------------
+-------------------------
+
+
+# 3)Parte Empirica
+
+
