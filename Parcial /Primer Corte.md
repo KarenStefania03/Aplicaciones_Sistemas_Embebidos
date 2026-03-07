@@ -236,3 +236,278 @@ La interfaz puede incluir:
 # 3)Parte Empirica
 
 
+### **A.Importar librerías**
+
+```python
+import cv2
+import mediapipe as mp
+```
+
+* **cv2**: Librería OpenCV usada para trabajar con imágenes y video.
+* **mediapipe**: Librería usada para detectar y rastrear manos.
+
+---
+
+### **B.Acceder al módulo de detección de manos**
+
+```python
+mp_hands = mp.solutions.hands
+```
+
+Se accede al módulo de **detección de manos** de MediaPipe.
+
+---
+
+### **C.Configuración del detector de manos**
+
+```python
+hands = mp_hands.Hands(
+    static_image_mode=False,
+    max_num_hands=2,
+    min_detection_confidence=0.7,
+    min_tracking_confidence=0.7
+)
+```
+
+Parámetros:
+
+* **static_image_mode=False**
+  Indica que se trabajará con video en tiempo real.
+
+* **max_num_hands=2**
+  Número máximo de manos que el sistema puede detectar.
+
+* **min_detection_confidence=0.7**
+  Nivel mínimo de confianza para detectar una mano.
+
+* **min_tracking_confidence=0.7**
+  Nivel mínimo de confianza para el seguimiento de la mano.
+
+---
+
+### **E.Abrir la cámara**
+
+```python
+cap = cv2.VideoCapture(0)
+```
+
+Abre la cámara web del computador.
+
+El número **0** indica la cámara principal.
+
+---
+
+### **F.Identificadores del pulgar**
+
+```python
+thumb_ids = [1,2,3,4]
+```
+
+MediaPipe detecta **21 puntos en la mano**.
+Aquí se seleccionan los puntos correspondientes al **pulgar**.
+
+---
+
+### **G.Bucle principal**
+
+```python
+while True:
+```
+
+Crea un bucle infinito para procesar continuamente los frames de la cámara.
+
+---
+
+### **H.Leer frame de la cámara**
+
+```python
+ret, frame = cap.read()
+```
+
+* **ret**: indica si la lectura fue exitosa.
+* **frame**: imagen capturada de la cámara.
+
+---
+
+### **I.Voltear la imagen**
+
+```python
+frame = cv2.flip(frame,1)
+```
+
+Invierte la imagen horizontalmente para que funcione como un espejo.
+
+---
+
+### **J.Convertir la imagen a RGB**
+
+```python
+rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+```
+
+OpenCV usa formato **BGR**, mientras que MediaPipe utiliza **RGB**, por lo que es necesario convertir la imagen.
+
+---
+
+### **K.Procesar la imagen**
+
+```python
+results = hands.process(rgb)
+```
+
+MediaPipe analiza la imagen para detectar manos.
+
+---
+
+### **L.Verificar si se detectaron manos**
+
+```python
+if results.multi_hand_landmarks:
+```
+
+Si se detecta una o más manos, se obtienen los puntos de referencia.
+
+---
+
+### **M.Recorrer cada mano detectada**
+
+```python
+for hand in results.multi_hand_landmarks:
+```
+
+Permite trabajar con cada mano detectada en la imagen.
+
+---
+
+### **N. Obtener dimensiones de la imagen**
+
+```python
+h, w, c = frame.shape
+```
+
+* **h**: altura
+* **w**: ancho
+* **c**: canales de color
+
+---
+
+### **Ñ.Crear lista de puntos**
+
+```python
+puntos = []
+```
+
+Lista para almacenar las coordenadas del pulgar.
+
+---
+
+### **O.Recorrer los puntos de la mano**
+
+```python
+for id,lm in enumerate(hand.landmark):
+```
+
+Recorre los **21 puntos** detectados por MediaPipe.
+
+---
+
+### **P.Filtrar los puntos del pulgar**
+
+```python
+if id in thumb_ids:
+```
+
+Selecciona únicamente los puntos correspondientes al pulgar.
+
+---
+
+### **Q.Convertir coordenadas**
+
+```python
+cx, cy = int(lm.x*w), int(lm.y*h)
+```
+
+Convierte las coordenadas normalizadas (0 a 1) a coordenadas reales en píxeles.
+
+---
+
+### **R.Guardar los puntos**
+
+```python
+puntos.append((cx,cy))
+```
+
+Se guardan las coordenadas del pulgar en la lista.
+
+---
+
+### **S.Dibujar los puntos**
+
+```python
+cv2.circle(frame,(cx,cy),7,(0,255,0),-1)
+```
+
+Dibuja un círculo verde en cada punto detectado.
+
+---
+
+### **T. Conectar los puntos del pulgar**
+
+```python
+if len(puntos)==4:
+```
+
+Verifica que los 4 puntos del pulgar estén detectados.
+
+---
+
+### U.Dibujar líneas**
+
+```python
+cv2.line(frame,puntos[0],puntos[1],(0,255,0),3)
+cv2.line(frame,puntos[1],puntos[2],(0,255,0),3)
+cv2.line(frame,puntos[2],puntos[3],(0,255,0),3)
+```
+
+Dibuja líneas entre los puntos para visualizar el pulgar.
+
+---
+
+### **V.Mostrar el video**
+
+```python
+cv2.imshow("Pulgares Detectados",frame)
+```
+
+Muestra el video con las detecciones.
+
+---
+
+### **W.Salir del programa**
+
+```python
+if cv2.waitKey(1) & 0xFF == 27:
+    break
+```
+
+Presionar **ESC** para cerrar el programa.
+
+---
+
+### **X.Liberar la cámara**
+
+```python
+cap.release()
+```
+
+Libera el acceso a la cámara.
+
+---
+
+### **Y.Cerrar ventanas**
+
+```python
+cv2.destroyAllWindows()
+```
+
+Cierra todas las ventanas abiertas por OpenCV.
