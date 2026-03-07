@@ -11,7 +11,7 @@
   
 * Los micropocedores en el cerebro de la computadora realiza las funciones de la CPU en un chip. Es mas potente y versátil, pensando para procesar grandes volúmenes en información en sistemas complejos.
 
-* <img width="621" height="205" alt="image" src="https://github.com/user-attachments/assets/f4cc688e-50ad-4b33-91cd-87e792a3fa72" />
+*  <img width="621" height="205" alt="image" src="https://github.com/user-attachments/assets/f4cc688e-50ad-4b33-91cd-87e792a3fa72" />
 
 
 ------
