@@ -16,10 +16,20 @@
 
 **RTA:**
 
-| MEMORIA   | CARACTERISCAS | VENTAJAS | DIFERENCIAS|
-|------------|----------|----------|-------------|
-| VON NEUMANN   | es una memraia que esta diseñada para datos e instrucciones,  es una memoria unca para datos e instrucciones, una solo bus para acceder a memoria y periféricos, procesamientos secuencial la CPU ejecuta una instrucción a la vez
-| ≤ 160°   | SENTADA  | 
 * Von Neumann, es una memraia que esta diseñada para datos e instrucciones
+
+*Característica:*
+
+* es una memoria unca para datos e instrucciones
+
+* una solo bus para acceder a memoria y periféricos
+
+* procesamientos secuencial la CPU ejecuta una instrucción a la vez
+
+*Ventajas:*
+
+* Diseño mas simple y económico
+
+* Flexible para computadores de propósito general
 
 * Harvar, es una memoria diseñada para poder separa datos e instrucciones lo cual nos permite mas velocidad
