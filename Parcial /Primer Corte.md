@@ -39,6 +39,9 @@
 
 * RISC (Computadora de Conjunto de Instrucciones Reducidas): Trabaja con un número limitado de instrucciones simples, lo que simplifica la programación y optimiza la eficiencia. Cuando un procesador está diseñado para manejar pocas instrucciones… se le denomina RISC.
 
+  <img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/b60aaff3-c570-4eee-bbd3-d9eced1360ad" />
+
+
 -----
 
 **D.¿Qué es ARM (Advanced RISC Machine)?**
