@@ -1,9 +1,6 @@
 <h1 align="center"> Pacial Primer Corte
-  
-# **Pacial Primer Corte**
 
-
-## **1)Parte Concepual**
+# **1)Parte Concepual**
 
 **A.¿Qué son los microcontroladores y los microprocesadores?**
 
