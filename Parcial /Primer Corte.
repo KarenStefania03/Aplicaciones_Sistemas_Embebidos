@@ -16,6 +16,10 @@
 
 **RTA:**
 
+| MEMORIA   | CARACTERISCAS | VENTAJAS | DIFERENCIAS|
+|------------|----------|----------|-------------|
+| VON NEUMANN   | es una memraia que esta diseñada para datos e instrucciones
+| ≤ 160°   | SENTADA  | 
 * Von Neumann, es una memraia que esta diseñada para datos e instrucciones
 
 * Harvar, es una memoria diseñada para poder separa datos e instrucciones lo cual nos permite mas velocidad
