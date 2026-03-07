@@ -108,4 +108,124 @@ Los **microcontroladores PIC** forman parte de una familia de dispositivos basad
 -----
 -----
 
-## **2)Parrte de Diseño**
+# **2)Parte de Diseño**
+
+## Sistema de Reconocimiento de Herramientas y Monitoreo de Movimiento
+
+Este proyecto propone un sistema basado en **visión por computadora** para identificar herramientas de laboratorio y analizar la velocidad de movimiento de personas utilizando **MediaPipe y aprendizaje automático**.
+
+---
+
+## 1. Base de datos de imágenes de herramientas
+
+Para entrenar el sistema de reconocimiento se debe crear una base de datos de imágenes de herramientas.
+
+#### Proceso
+
+- Tomar **fotografías de cada herramienta del laboratorio** desde distintas perspectivas.
+- **Estandarizar las imágenes**:
+  - Misma resolución
+  - Fondo homogéneo
+- Guardar las imágenes en una **base de datos estructurada** como:
+  - SQLite
+  - PostgreSQL
+
+#### Información almacenada
+
+Cada imagen debe incluir etiquetas como:
+
+| Campo | Descripción |
+|---|---|
+| Nombre | Nombre de la herramienta |
+| Tipo | Tipo o categoría de herramienta |
+| Función | Uso o aplicación principal |
+
+#### Herramientas recomendadas
+
+- **Google Colab**
+- **TensorFlow Dataset**
+
+Estas herramientas permiten organizar las imágenes y entrenar modelos de aprendizaje automático.
+
+---
+
+## 2. Sistema de clasificación con MediaPipe
+
+El sistema utilizará **MediaPipe** para reconocer herramientas mediante visión por computadora.
+
+#### Funciones principales
+
+- Reconocimiento de objetos.
+- Entrenamiento del modelo usando la base de datos de imágenes.
+
+#### Flujo del sistema
+
+| Etapa | Descripción |
+|---|---|
+| Entrada | Capturas en tiempo real desde cámara o video |
+| Procesamiento | Detección de objetos mediante *bounding boxes* con MediaPipe |
+| Salida | Nombre de la herramienta identificada y nivel de confianza |
+
+---
+
+## 3. Detección de velocidad de personas
+
+El sistema también puede analizar el movimiento de personas utilizando **MediaPipe Pose**.
+
+#### Proceso
+
+- Identificación de **articulaciones del cuerpo humano**.
+- Cálculo del cambio de posición en el tiempo:
+
+
+- Definición de **umbrales de velocidad** para distinguir entre:
+  - Movimiento normal
+  - Movimiento rápido
+
+### Resultado
+
+- Generación de **alertas automáticas** cuando se supera el límite de velocidad definido.
+
+---
+
+## 4. Implementación en plataforma web o móvil
+
+El sistema puede implementarse en aplicaciones web o móviles.
+
+### Backend
+
+Frameworks recomendados:
+
+- Flask
+- Django
+
+Funciones:
+- Procesamiento de datos
+- Ejecución del modelo
+- Envío de resultados al cliente
+
+### Frontend
+
+Para la interfaz web se pueden utilizar:
+
+- React
+- Vue.js
+
+### Aplicación móvil
+
+Opciones recomendadas:
+
+- Flutter
+- React Native
+
+Estas aplicaciones se conectan al **backend** para obtener los resultados del sistema.
+
+---
+
+## 5. Visualización del sistema
+
+La interfaz puede incluir:
+
+-  Panel con las herramientas detectadas  
+-  Indicador de velocidad de las personas  
+-  Alertas emitidas en tiempo real
