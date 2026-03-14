@@ -3,7 +3,7 @@
 **Asignatura:** Aplicaciones en Sistemas Embebidos  
 **Institución:** Fundación Universitaria Compensar  
 **Docente:** Diego Alejandro Barragán Vargas  
-
+**Miembro:** Karen Stefania Rivera Carrero, Carlos Alberto Castro Castillo, Lina Marcela Contreras Sanabria
 ---
 ## Introducción
 
