@@ -1,11 +1,10 @@
 # Punto 2 — Sistema de iluminación y monitoreo de temperatura con chatbot de voz
 
-> **Asignatura:** Aplicaciones en Sistemas Embebidos  
-> **Institución:** Fundación Universitaria Compensar  
-> **Docente:** Diego Alejandro Barragán Vargas  
+**Asignatura:** Aplicaciones en Sistemas Embebidos  
+**Institución:** Fundación Universitaria Compensar  
+**Docente:** Diego Alejandro Barragán Vargas  
 
 ---
-
 ## Introducción
 
 Para este punto del laboratorio armamos un sistema donde uno le habla directamente al computador y este responde controlando luces físicas o diciéndole la temperatura que está midiendo el sensor. No hay que escribir nada, todo funciona por voz.
@@ -17,7 +16,6 @@ El DHT11 fue el sensor que usamos porque ya lo teníamos disponible y porque ade
 La parte de voz la maneja Python con la librería speech_recognition, que captura lo que uno dice por el micrófono y lo convierte en texto. Ese texto luego se analiza buscando palabras clave para saber qué acción ejecutar, y la respuesta se genera también en audio usando pyttsx3 para que el sistema le hable de vuelta al usuario.
 
 ---
-
 ## Objetivos
 
 - Implementar un chatbot completamente por voz, sin necesidad de escribir nada.
@@ -27,7 +25,6 @@ La parte de voz la maneja Python con la librería speech_recognition, que captur
 - Integrar reconocimiento de voz y síntesis de voz en un sistema embebido funcional.
 
 ---
-
 ## Materiales
 
 | Componente | Cantidad | Para qué se usó |
@@ -77,7 +74,6 @@ Instalar "DHT sensor library" de Adafruit desde el gestor de librerías del IDE 
 │   Pin 7  ◄── DHT11 (10kΩ pull-up a 5V)        │
 └─────────────────────────────────────────────────┘
 ```
-
 Lo que pasa cada vez que uno habla:
 
 1. El micrófono captura el audio y speech_recognition lo convierte en texto.
@@ -87,7 +83,6 @@ Lo que pasa cada vez que uno habla:
 5. Python recibe la respuesta y pyttsx3 se la dice al usuario en voz alta.
 
 ---
-
 ## Conexiones físicas
 
 ### LEDs
@@ -113,7 +108,6 @@ Pin 7  ◄──── Pin DATA del DHT11
 ```
 
 ---
-
 ## Qué hace el Arduino
 
 Al encender, el Arduino configura los pines de los LEDs como salidas y abre la comunicación serial. Luego manda la palabra `LISTO` para avisarle a Python que ya puede empezar a mandar comandos, porque si Python arranca muy rápido y el Arduino todavía está iniciando, los primeros mensajes se pierden.
@@ -128,7 +122,6 @@ Después de eso se queda escuchando el serial. Cada vez que llega un comando:
 Si llega un comando que no reconoce, responde con `ERROR` para que Python sepa que algo salió mal.
 
 ---
-
 ## Qué hace Python
 
 **El micrófono y el reconocimiento de voz** están manejados por speech_recognition. El programa abre el micrófono, ajusta el nivel de ruido ambiente durante medio segundo para que no confunda el ruido de fondo con voz, y luego se queda escuchando. Cuando detecta que alguien habló, manda el audio al servicio de Google Speech Recognition en español y recibe el texto de vuelta.
@@ -140,7 +133,6 @@ Si llega un comando que no reconoce, responde con `ERROR` para que Python sepa q
 **La comunicación con Arduino** usa pyserial. Python abre el puerto serial, manda el comando como texto terminado en salto de línea, espera la respuesta y la procesa. Todo eso pasa en menos de un segundo para los LEDs, y en unos 2 o 3 segundos para la temperatura porque el DHT11 es más lento respondiendo.
 
 ---
-
 ## Cómo ponerlo a funcionar
 
 **Paso 1 — Armar el circuito**
@@ -169,7 +161,6 @@ python chatbot.py
 El sistema va a decir en voz alta "Sistema listo, dime qué necesitas" cuando esté conectado y funcionando.
 
 ---
-
 ## Ejemplos de conversación por voz
 ```
 Usuario dice:  "enciende el led rojo"
@@ -189,7 +180,6 @@ Sistema dice:  "Listo, el led verde está encendido."
 ```
 
 ---
-
 ## Conclusiones
 
 Trabajar con comandos de voz le da al sistema una dimensión completamente diferente a la de un proyecto típico de Arduino. En vez de presionar botones o escribir comandos, la interacción es completamente natural y eso hace que el sistema se sienta mucho más cercano a algo que uno usaría en la vida real.
@@ -200,19 +190,3 @@ El reconocimiento de voz en español funcionó bastante bien en condiciones norm
 
 Lo más valioso de este punto fue ver cómo tecnologías que uno normalmente ve por separado, el hardware embebido, la comunicación serial, el reconocimiento de voz y la síntesis de audio, se pueden unir en un solo sistema funcional con relativamente pocas líneas de código.
 
----
-
-## Estructura del repositorio
-```
-punto2/
-├── README.md
-├── punto2_arduino/
-│   └── punto2_arduino.ino
-├── chatbot.py
-└── imagenes/
-    └── diagrama_conexiones.png
-```
-
----
-
-> Códigos de ejemplo del curso: https://github.com/dialejobv/aplicacion_sistemas_embebidos
