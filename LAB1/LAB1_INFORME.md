@@ -190,3 +190,169 @@ El reconocimiento de voz en español funcionó bastante bien en condiciones norm
 
 Lo más valioso de este punto fue ver cómo tecnologías que uno normalmente ve por separado, el hardware embebido, la comunicación serial, el reconocimiento de voz y la síntesis de audio, se pueden unir en un solo sistema funcional con relativamente pocas líneas de código.
 
+# Punto 3 — Sistema de reconocimiento de colores con visión artificial y control de LEDs
+
+## Introducción
+
+En este punto del laboratorio desarrollamos un sistema que usa la cámara del computador para detectar colores en tiempo real y, dependiendo del color que encuentre frente a la cámara, enciende o apaga un LED físico conectado al Arduino. Si la cámara detecta algo rojo, se enciende el LED rojo. Si detecta algo verde, se enciende el LED verde. En el momento en que el objeto desaparece del campo de visión, el LED correspondiente se apaga solo.
+
+Todo el procesamiento de imagen lo hace Python usando OpenCV. El programa captura cada fotograma de la cámara, lo convierte al espacio de color HSV para analizar los tonos con más precisión, y busca regiones que coincidan con los rangos de color definidos. Cuando encuentra una región suficientemente grande, le avisa al Arduino por serial para que actúe sobre el hardware.
+
+Lo que hace interesante este sistema es que el Arduino no toma ninguna decisión por su cuenta, simplemente obedece lo que Python le dice. Todo el "cerebro" del sistema está en el código de visión artificial corriendo en el computador, y el Arduino actúa como el brazo ejecutor que controla el mundo físico.
+
+---
+## Objetivos
+
+- Usar OpenCV en Python para detectar colores específicos en tiempo real desde la cámara.
+- Establecer comunicación serial entre Python y Arduino para enviar comandos según lo que se detecte.
+- Controlar LEDs físicos de forma automática basándose en la detección de color.
+- Entender cómo integrar visión artificial con sistemas embebidos.
+
+---
+
+## Materiales
+
+| Componente | Cantidad | Para qué se usó |
+|---|---|---|
+| Arduino UNO | 1 | Controlar los LEDs según los comandos recibidos |
+| LED rojo | 1 | Se enciende cuando la cámara detecta rojo |
+| LED verde | 1 | Se enciende cuando la cámara detecta verde |
+| Resistencias 220Ω | 2 | Proteger los LEDs |
+| Protoboard | 1 | Armar el circuito |
+| Cables jumper | varios | Conexiones |
+| Cable USB | 1 | Comunicación PC ↔ Arduino y alimentación |
+| PC con cámara | 1 | Capturar video y correr OpenCV |
+
+**Librería Python necesaria:**
+```bash
+pip install opencv-python numpy pyserial
+```
+
+---
+
+## Cómo está organizado el sistema
+```
+┌──────────────────────────────────────────────────┐
+│                    PC / Laptop                   │
+│                                                  │
+│   Cámara ──► OpenCV captura fotograma            │
+│                    │                             │
+│                    ▼                             │
+│          Convierte a HSV                         │
+│                    │                             │
+│                    ▼                             │
+│   Aplica máscara de color rojo y verde           │
+│                    │                             │
+│                    ▼                             │
+│   Busca contornos con área mayor a 800px         │
+│                    │                             │
+│          ┌─────────┴──────────┐                 │
+│     rojo_detectado      verde_detectado          │
+│          │                    │                 │
+│     ROJO_ON/OFF          VERDE_ON/OFF            │
+│                    │                             │
+│              pyserial (USB Serial)               │
+└────────────────────┼─────────────────────────────┘
+                     │
+┌────────────────────▼─────────────────────────────┐
+│                 Arduino UNO                      │
+│                                                  │
+│   Pin 8 ──► LED Rojo  (220Ω ──► GND)            │
+│   Pin 9 ──► LED Verde (220Ω ──► GND)            │
+└──────────────────────────────────────────────────┘
+```
+
+El ciclo completo ocurre en cada fotograma de video, o sea unas 20 a 30 veces por segundo. Eso hace que la respuesta del LED sea prácticamente instantánea al mostrar u ocultar un objeto de color.
+
+---
+
+## Conexiones físicas
+
+### LEDs
+
+El LED rojo va conectado al pin 8 del Arduino y el LED verde al pin 9. Cada uno lleva una resistencia de 220Ω en serie entre el pin y el ánodo del LED para limitar la corriente. El cátodo de cada LED va directo a GND.
+```
+Arduino
+──────────────────────────────
+Pin 8  ──► [220Ω] ──► (+) LED rojo  ──► (-) ──► GND
+Pin 9  ──► [220Ω] ──► (+) LED verde ──► (-) ──► GND
+```
+
+## Qué hace el código del Arduino
+
+El Arduino es la parte más sencilla del sistema. Al encender configura los pines 8 y 9 como salidas y abre la comunicación serial a 9600 baudios. Después se queda en un ciclo infinito esperando que llegue algo por serial.
+
+Cuando Python le manda un mensaje, el Arduino lo lee hasta encontrar el salto de línea, le quita los espacios sobrantes con `trim()` y lo compara con los cuatro comandos que conoce:
+
+- `ROJO_ON` pone el pin 8 en HIGH y el LED rojo se enciende.
+- `ROJO_OFF` pone el pin 8 en LOW y el LED rojo se apaga.
+- `VERDE_ON` pone el pin 9 en HIGH y el LED verde se enciende.
+- `VERDE_OFF` pone el pin 9 en LOW y el LED verde se apaga.
+
+Nada más. El Arduino no decide nada por su cuenta, solo ejecuta lo que Python le dice.
+
+---
+
+## Qué hace el código de Python
+
+**La conexión con Arduino** se abre al inicio con pyserial en el puerto COM3 a 9600 baudios. Se espera 2 segundos antes de seguir para que el Arduino termine de reiniciarse, porque cada vez que Python abre el puerto el Arduino se resetea automáticamente.
+
+**La captura de video** usa `cv2.VideoCapture(0)` que abre la cámara principal del computador. Cada fotograma se voltea horizontalmente con `cv2.flip(frame, 1)` para que funcione como un espejo, lo que hace más intuitivo mostrar objetos frente a la cámara.
+
+**La conversión a HSV** es el paso clave de todo el sistema. En vez de trabajar con los colores en formato BGR (el formato por defecto de OpenCV), el fotograma se convierte al espacio HSV que separa el tono del color (Hue), la saturación y el brillo en canales independientes. Eso hace que detectar un color específico sea mucho más resistente a cambios de iluminación que si se hiciera directamente en BGR.
+
+**La detección de rojo** requiere dos rangos de HSV en vez de uno porque el rojo en el espacio HSV está partido en dos extremos del círculo cromático: valores cercanos a 0 y valores cercanos a 180. Por eso el código define `red_lower1/red_upper1` para el rango bajo y `red_lower2/red_upper2` para el rango alto, y suma las dos máscaras para cubrir todo el rojo posible.
+
+**La detección de verde** solo necesita un rango, definido entre los valores 40 y 80 del canal Hue, que corresponde a los tonos verdes del espacio HSV.
+
+**Los contornos** se buscan sobre cada máscara de color. Para cada contorno encontrado se calcula su área y solo se considera válido si supera los 800 píxeles. Ese filtro de área es importante porque evita que pequeños reflejos o ruido de la imagen disparen falsas detecciones. Cuando se encuentra un contorno válido, se dibuja sobre el fotograma y se escribe el nombre del color encima, lo que permite ver en tiempo real qué está detectando el sistema.
+
+**El envío de comandos** ocurre al final de cada fotograma. Si durante ese fotograma se detectó rojo, se manda `ROJO_ON`, y si no se detectó, se manda `ROJO_OFF`. Lo mismo para el verde. Eso garantiza que los LEDs siempre reflejen exactamente lo que está viendo la cámara en ese momento, sin que sea necesario saber el estado anterior.
+
+---
+
+## Cómo ponerlo a funcionar
+
+**Paso 1 — Armar el circuito**
+Conectar los LEDs en los pines 8 y 9 del Arduino con sus respectivas resistencias de 220Ω. Verificar la polaridad antes de energizar.
+
+**Paso 2 — Subir el código al Arduino**
+Abrir el IDE de Arduino, seleccionar la placa y el puerto correcto en el menú Herramientas y subir el archivo `ARDUINOPUNTO3.ino`.
+
+**Paso 3 — Verificar el puerto serial**
+En Windows se identifica el puerto en el Administrador de Dispositivos bajo "Puertos COM y LPT". Si el puerto no es COM3, hay que cambiar esa línea en el archivo `PUNTO3.py`:
+```python
+arduino = serial.Serial('COM3', 9600, timeout=1)
+```
+
+**Paso 4 — Instalar las librerías**
+```bash
+pip install opencv-python numpy pyserial
+```
+
+**Paso 5 — Ejecutar el sistema**
+```bash
+python PUNTO3.py
+```
+
+Se abre una ventana llamada "Vision Artificial" mostrando lo que ve la cámara en tiempo real. Para cerrar el programa se presiona la tecla `ESC`.
+
+---
+
+## Cómo usar el sistema
+
+Una vez corriendo el programa, basta con poner frente a la cámara un objeto de color rojo o verde y el LED correspondiente se enciende de inmediato. Cuando el objeto se retira del campo de visión, el LED se apaga solo. Se pueden detectar los dos colores al mismo tiempo si se tienen objetos de ambos colores frente a la cámara simultáneamente.
+
+Lo que aparece en la ventana de video es el fotograma en vivo con los contornos dibujados alrededor de los objetos detectados y el nombre del color escrito encima de cada uno. Eso permite verificar que el sistema está reconociendo correctamente antes de mirar los LEDs físicos.
+
+---
+
+## Conclusiones
+
+Este punto fue el más completo del laboratorio porque unió tres áreas que normalmente se trabajan por separado: visión artificial, comunicación serial y control de hardware embebido. Verlos funcionar juntos en un sistema coherente ayuda a entender cómo se construyen aplicaciones del mundo real como robots con sensores visuales o sistemas de clasificación automática en líneas de producción.
+
+La parte más delicada fue ajustar los rangos HSV para que la detección funcionara bien con la iluminación del laboratorio. El rojo fue especialmente complicado porque está dividido en dos extremos del espacio HSV y al principio solo detectaba una parte del rango. Una vez que se entendió eso y se definieron los dos rangos separados, funcionó correctamente.
+
+El filtro de área mínima de 800 píxeles fue una decisión importante porque sin él el sistema disparaba los LEDs por cualquier pequeño reflejo rojo o verde en la imagen. Con ese filtro solo reacciona cuando hay un objeto real de tamaño considerable frente a la cámara.
+
+Como mejora futura sería interesante añadir más colores, detectar formas geométricas además de colores, o integrar el chatbot del punto 2 para que además de controlar los LEDs el sistema pueda responder preguntas sobre lo que está viendo la cámara.
